@@ -9,28 +9,7 @@ from pydantic import EmailStr
 from src.utils.user import conf,password_hash
 from src.resource.Auth.schema import Resetpassword_schema,DeleteUserRequest_schema
 from src.config import SECRET_KEY ,ALGORITHM ,ACCESS_TOKEN_EXPIRE_MINUTES
-
-
-def create_access_token(data: dict, expires_delta: timedelta = None):
-
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
-    else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-    return encoded_jwt
-
-def verify_token(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-
-        return payload
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired")
-    except jwt.InvalidTokenError:   
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
+from src.utils.user import create_access_token,verify_token
 
 
 async def send_otp_email(otp_code: str, email: str):

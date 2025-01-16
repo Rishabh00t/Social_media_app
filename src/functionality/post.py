@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.resource.Post.schema import Updatepost_schema,Postcreate_schema
 IMAGEDIR = "image/"
 import uuid ,os
-from src.functionality.auth import verify_token
+from src.utils.user import verify_token
 
 def create_post(post:Postcreate_schema, db: Session = Depends(get_db), image: UploadFile = File(...)):
     try:
