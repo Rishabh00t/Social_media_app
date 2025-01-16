@@ -10,3 +10,8 @@ class Delete_comment_schema(BaseModel):
 
 class Get_comment_schema(BaseModel):
     comment_id:int
+
+class Comment_like_schema(BaseModel):
+    comment_id:int
+    post_id:int
+    user_id:int

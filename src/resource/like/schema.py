@@ -3,7 +3,7 @@ from typing import List, Optional
 
 
 # Like schema for input when creating a like
-class LikeCreate(BaseModel):
+class LikeCreate_schema(BaseModel):
     user_id: int
     post_id: int
 

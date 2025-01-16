@@ -18,7 +18,7 @@ class OTP_model(Base):
     __tablename__ = "otp"
     
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer,ForeignKey('users.id'),unique=False)
+    user_id = Column(Integer,ForeignKey('users.id',ondelete='cascade'),unique=False)
     
     otp_code = Column(Integer)
     expire_at = Column(DateTime, nullable=False)

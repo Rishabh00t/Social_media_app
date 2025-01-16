@@ -7,7 +7,7 @@ from sqlalchemy.orm import Relationship
 class Post_model(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer,ForeignKey('users.id'))
+    user_id = Column(Integer,ForeignKey('users.id',ondelete='cascade'))
     user = Relationship("User_model")
     title = Column(String(255))
     captions = Column(Text,nullable=True)

@@ -159,6 +159,7 @@ def verify_otp(user_id:int , otp_code: int, db):
     
 
 def delete_user(request: DeleteUserRequest_schema, db):
+    
     try:
         current_user = verify_token(request.token)
     except HTTPException as e:
