@@ -2,7 +2,6 @@ from pydantic import BaseModel,EmailStr
 from datetime import datetime
 
 class Postcreate_schema(BaseModel):
-    token:str
     user_id:int
     title:str
     captions:str

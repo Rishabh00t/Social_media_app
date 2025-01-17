@@ -1,4 +1,4 @@
-from fastapi import Depends,HTTPException,status,File,UploadFile
+from fastapi import Depends,HTTPException,status,File,UploadFile,Security
 from src.resource.Post.model import Post_model
 from random import randint
 from database.database import get_db
@@ -7,10 +7,13 @@ from src.resource.Post.schema import Updatepost_schema,Postcreate_schema
 IMAGEDIR = "image/"
 import uuid ,os
 from src.utils.user import verify_token
+from fastapi.security import HTTPBearer
 
-def create_post(post:Postcreate_schema, db: Session = Depends(get_db), image: UploadFile = File(...)):
+security = HTTPBearer()
+
+def create_post(post:Postcreate_schema, db: Session = Depends(get_db), image: UploadFile = File(...),token: str = Security(security)):
     try:
-        current_user = verify_token(post.token)
+        current_user = verify_token(token.credentials)
        
 
         if current_user["id"] != post.user_id:

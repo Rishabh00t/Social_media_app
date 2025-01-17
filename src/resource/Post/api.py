@@ -1,20 +1,22 @@
-from fastapi import Depends,APIRouter,UploadFile,File,Form,HTTPException
+from fastapi import Depends,APIRouter,UploadFile,File,Form,HTTPException,Security
 from sqlalchemy.orm import Session
 from database.database import get_db
 from src.functionality.post import create_post,get_post_by_id,delete_post,update_post
 from src.resource.Post.schema import GetPost_schema,DeletePost_schema,Updatepost_schema,Postcreate_schema
 from src.resource.Post.model import Post_model
-
+from fastapi.security import HTTPBearer
 post_router=APIRouter()
+
+security = HTTPBearer()
 
 @post_router.post("/create_post/")
 def create_user_post(
-    token :str = Form(...),
     user_id: int = Form(...),
     title: str = Form(...),
     captions: str = Form(...),
     db: Session = Depends(get_db),
-    image: UploadFile = File(...)):
+    image: UploadFile = File(...),
+    token: str = Security(security)):
     try:
         post_data = Postcreate_schema(title=title, captions=captions, user_id=user_id , token=token)
         post = create_post(post=post_data,db=db,image=image)
