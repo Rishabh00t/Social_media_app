@@ -4,13 +4,16 @@ from src.resource.Auth.model import User_model, OTP_model
 from sqlalchemy.exc import SQLAlchemyError
 import jwt
 from datetime import datetime,timedelta
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status,Depends,Security
 from pydantic import EmailStr
 from src.utils.user import conf,password_hash
-from src.resource.Auth.schema import Resetpassword_schema,DeleteUserRequest_schema
-from src.config import SECRET_KEY ,ALGORITHM ,ACCESS_TOKEN_EXPIRE_MINUTES
-from src.utils.user import create_access_token,verify_token
+from src.resource.Auth.schema import Resetpassword_schema
+from src.utils.user import create_access_token,verify_token,create_refresh_token
+from sqlalchemy.orm import Session
+from database.database import get_db
+from fastapi.security import HTTPBearer
 
+security = HTTPBearer()
 
 async def send_otp_email(otp_code: str, email: str):
     try:
@@ -91,7 +94,9 @@ def login(username: str, password: str, db):
 
             if password_hash.verify(password, user_data.password):
 
-                token = create_access_token(data={"sub": user_data.username, "id": user_data.id})
+                token1 = create_access_token(data={"sub": user_data.username, "id": user_data.id})
+
+                token2 = create_refresh_token(data={"sub":user_data.username, "id": user_data.id})
                 return {
                     "success": True,
                     "message": "You are successfully logged in.",
@@ -102,7 +107,8 @@ def login(username: str, password: str, db):
                         "created_at": user_data.created_at,
                         "is_deleted": user_data.is_deleted,
                     },
-                    "token":token
+                    "Access_token":token1,
+                    "Refresh_token":token2
                 }
 
         return {"success": False, "message": "Invalid username or password."}
@@ -137,31 +143,31 @@ def verify_otp(user_id:int , otp_code: int, db):
         return {"success": False, "message": "An unexpected error occurred during OTP verification."}
     
 
-def delete_user(request: DeleteUserRequest_schema, db):
+def delete_user(user_id:int,db:Session=Depends(get_db),token: str = Security(security)):
     
     try:
-        current_user = verify_token(request.token)
+        current_user = verify_token(token.credentials)
     except HTTPException as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid or expired token. Please log in again."
         )
 
-    if current_user["id"] != request.user_id:
+    if current_user["id"] != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="You do not have permission to delete this user."
         )
-
-    user = db.query(User_model).filter(User_model.id == request.user_id).first()
+    
+    user = db.query(User_model).filter(User_model.id == user_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with ID {request.user_id} not found"
+            detail=f"User with ID {user_id} not found"
         )
     db.delete(user)
     db.commit()
-    return {"success": True, "message": f"User with ID {request.user_id} successfully deleted."}
+    return {"success": True, "message": f"User with ID {user_id} successfully deleted."}
 
 
 

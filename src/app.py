@@ -3,6 +3,8 @@ from src.resource.Auth.api import auth_router
 from src.resource.Post.api import post_router
 from src.resource.comment.api import comment_router
 from src.resource.like.api import like_router
+from src.resource.user_profile.api import user_router
+
 
 description = """
 SocialBuzz API allows you to build and manage a vibrant social media platform. 🚀
@@ -54,6 +56,7 @@ app.include_router(auth_router)
 app.include_router(post_router)
 app.include_router(comment_router)
 app.include_router(like_router)
+app.include_router(user_router)
 
 @app.get("/")
 def read_app():

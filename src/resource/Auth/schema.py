@@ -35,10 +35,6 @@ class Token_schema(BaseModel):
     access_token: str
     token_type: str
 
-class DeleteUserRequest_schema(BaseModel):
-    token:str
-    user_id:int
-
 class PasswordForgot_schema(BaseModel):
     email:EmailStr
 class Resetpassword_schema(BaseModel):

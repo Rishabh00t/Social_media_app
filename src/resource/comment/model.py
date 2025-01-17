@@ -11,7 +11,7 @@ class Comment_model(Base):
     post_id = Column(Integer,ForeignKey("posts.id",ondelete='cascade'))
     post = Relationship("Post_model")
     text = Column(String(255))
-    # likes = Column(Integer,default=0)
+    likes = Column(Integer,default=0)
     created_at = Column(DateTime,default=datetime.now(tz=timezone.utc))
     is_deleted = Column(Boolean,default=False)
 

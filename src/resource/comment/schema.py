@@ -15,3 +15,7 @@ class Comment_like_schema(BaseModel):
     comment_id:int
     post_id:int
     user_id:int
+
+class Comment_dislike_schema(BaseModel):
+    comment_like_id : int
+    comment_id : int

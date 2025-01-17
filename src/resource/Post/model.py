@@ -15,3 +15,4 @@ class Post_model(Base):
     created_at = Column(DateTime,default=datetime.now(tz=timezone.utc))
     updated_at = Column(DateTime,default=datetime.now(tz=timezone.utc))    
     is_deleted = Column(Boolean,default=False)
+    like_count = Column(Integer, default=0)

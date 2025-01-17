@@ -5,10 +5,13 @@ from src.resource.Auth.model import User_model
 from src.functionality.auth import signup
 from src.resource.Auth.schema import userCreate_schema
 from src.functionality.auth import login,verify_otp,verify_token,delete_user,passwordforgot,resetpassword
-from src.resource.Auth.schema import LoginRequest_schema,OTPRequest_schema,DeleteUserRequest_schema,PasswordForgot_schema,Resetpassword_schema
-from fastapi import Depends
+from src.resource.Auth.schema import LoginRequest_schema,OTPRequest_schema,PasswordForgot_schema,Resetpassword_schema
 from fastapi import Depends
 from src.resource.Auth.token import oauth2_scheme
+from fastapi import Security
+from fastapi.security import HTTPBearer
+
+security = HTTPBearer()
 
 auth_router=APIRouter()
 
@@ -37,9 +40,9 @@ async def protected_route(token: str = Depends(oauth2_scheme)):
     user = verify_token(token)
     return {"success": True, "message": "Access granted", "user": user}
 
-@auth_router.delete("/deleteuser")
-async def deleteUser(request:DeleteUserRequest_schema,db:Session=Depends(get_db)):
-    response=delete_user(request,db)
+@auth_router.delete("/deleteuser/{user_id}")
+async def deleteUser(user_id:int,db:Session=Depends(get_db),token: str = Security(security)):
+    response=delete_user(user_id=user_id,db=db,token=token)
     return response
 
 @auth_router.post("/forgotpassword")
