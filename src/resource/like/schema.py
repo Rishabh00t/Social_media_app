@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from typing import List, Optional
 
 
 
@@ -9,7 +8,7 @@ class LikeCreate_schema(BaseModel):
 
 
 
-class Like(BaseModel):
+class Like_Response(BaseModel):
     id: int
     user_id: int
     post_id: int

@@ -1,37 +1,42 @@
-from fastapi import Depends,HTTPException,status,File,UploadFile,Security
+from fastapi import Depends,HTTPException,status,File,UploadFile
 from src.resource.Post.model import Post_model
 from random import randint
 from database.database import get_db
 from sqlalchemy.orm import Session
 from src.resource.Post.schema import Updatepost_schema,Postcreate_schema
-IMAGEDIR = "image/"
 import uuid ,os
 from src.utils.user import verify_token
-from fastapi.security import HTTPBearer
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
+from fastapi import Security
+
+IMAGEDIR = "image/"
 
 security = HTTPBearer()
 
-def create_post(post:Postcreate_schema, db: Session = Depends(get_db), image: UploadFile = File(...),token: str = Security(security)):
+def create_post(
+    post: Postcreate_schema,
+    db: Session = Depends(get_db),
+    image: UploadFile = File(...),
+    token: HTTPAuthorizationCredentials = Security(security)
+):
     try:
         current_user = verify_token(token.credentials)
-       
 
         if current_user["id"] != post.user_id:
             raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You do not have permission to delete this user."
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to create this post."
             )
 
-        # breakpoint()
+
         file_extension = image.filename.split('.')[-1]
         image.filename = f"{uuid.uuid4()}.{file_extension}"
-        
-
         file_path = f"{IMAGEDIR}/{image.filename}"
+
         contents = image.file.read()
         with open(file_path, "wb") as f:
             f.write(contents)
-        
+
         db_post = Post_model(
             user_id=current_user["id"],
             title=post.title,
@@ -41,12 +46,15 @@ def create_post(post:Postcreate_schema, db: Session = Depends(get_db), image: Up
         db.add(db_post)
         db.commit()
         db.refresh(db_post)
-        
-        return {"success": True,
-                "message": "Post created successfully",
-                "filepath": file_path}
-    except Exception:
-        return {"success": False, "message": "An unexpected error occurred during post creation"}
+
+        return {
+            "success": True,
+            "message": "Post created successfully",
+            "filepath": file_path
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 def get_post_by_id(get_user, db: Session = Depends(get_db)):
@@ -119,3 +127,5 @@ def update_post(post_id,update_post:Updatepost_schema,db:Session=Depends(get_db)
     except Exception as e:
         print(f"Unexpected error during updating the user`s post: {e}")
         return {"success": False, "message": "An unexpected error occurred during updating the user`s post."}
+    
+

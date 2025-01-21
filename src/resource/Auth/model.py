@@ -13,6 +13,7 @@ class User_model(Base):
     updated_at = Column(DateTime,default=datetime.now(tz=timezone.utc))
     is_verified = Column(Boolean,default=False)
     is_deleted = Column(Boolean,default=False)
+    followers_count = Column(Integer,default=0)
 
 class OTP_model(Base):
     __tablename__ = "otp"

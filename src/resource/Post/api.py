@@ -4,25 +4,29 @@ from database.database import get_db
 from src.functionality.post import create_post,get_post_by_id,delete_post,update_post
 from src.resource.Post.schema import GetPost_schema,DeletePost_schema,Updatepost_schema,Postcreate_schema
 from src.resource.Post.model import Post_model
-from fastapi.security import HTTPBearer
+from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
 post_router=APIRouter()
 
 security = HTTPBearer()
 
-@post_router.post("/create_post/")
+@post_router.post("/create_post")
 def create_user_post(
     user_id: int = Form(...),
     title: str = Form(...),
     captions: str = Form(...),
     db: Session = Depends(get_db),
     image: UploadFile = File(...),
-    token: str = Security(security)):
+    token: HTTPAuthorizationCredentials = Security(security)
+):
     try:
-        post_data = Postcreate_schema(title=title, captions=captions, user_id=user_id , token=token)
-        post = create_post(post=post_data,db=db,image=image)
+        post_data = Postcreate_schema(title=title, captions=captions, user_id=user_id)
+        
+        post = create_post(post=post_data, db=db, image=image, token=token)
+        
         return post
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @post_router.get("/get_posts")
 async def get_users(db: Session = Depends(get_db)):   

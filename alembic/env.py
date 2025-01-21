@@ -9,6 +9,7 @@ from src.resource.Auth.model import User_model,OTP_model
 from src.resource.Post.model import Post_model
 from src.resource.like.model import Like_model
 from src.resource.comment.model import Comment_model,Comment_like
+from src.resource.followers.model import Follower_model
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

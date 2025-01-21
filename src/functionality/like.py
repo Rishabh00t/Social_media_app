@@ -29,7 +29,7 @@ def create_post_like(post_like: LikeCreate_schema, db: Session = Depends(get_db)
         db_like = Like_model(
             user_id=post_like.user_id,
             post_id=post_like.post_id,
-            created_at=datetime.utcnow()
+            created_at=datetime.utcnow()    
         )
         db.add(db_like)
 
@@ -48,7 +48,7 @@ def create_post_like(post_like: LikeCreate_schema, db: Session = Depends(get_db)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-def dislike(post_dislike = Dislike_schema,db:Session=Depends(get_db)):
+def dislike(post_dislike : Dislike_schema,db:Session=Depends(get_db)):
     try:
         # breakpoint()
         post = db.query(Post_model).filter(Post_model.id == post_dislike.post_id).first()
