@@ -1,5 +1,5 @@
-from fastapi import Depends,APIRouter,HTTPException
-from sqlalchemy.orm import Session
+from fastapi import Depends,APIRouter,HTTPException # type: ignore
+from sqlalchemy.orm import Session # type: ignore
 from database.database import get_db
 from src.resource.comment.schema import Create_comment_schema,Delete_comment_schema,Get_comment_schema,Comment_like_schema,Comment_dislike_schema
 from src.functionality.comment import create_comment,delete_comment,get_comment_by_id,create_like,create_dislike
@@ -8,7 +8,7 @@ comment_router = APIRouter()
 
 @comment_router.post("/create_comment")
 def create_user_comment(request:Create_comment_schema,db:Session=Depends(get_db)):
-    response = create_comment(request=request,db=db)
+    response = create_comment(request,db)
     return response
 
 @comment_router.delete("/delete_comment")

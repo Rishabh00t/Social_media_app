@@ -39,8 +39,8 @@ def unfollow(unfollow_user:Unfollow_schema,db:Session=Depends(get_db)):
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         
-        unfollow_data = db.query(User_model).filter(User_model.id == unfollow_user.follower_id).first()
-        if not unfollow:
+        unfollow_data = db.query(Follower_model).filter(Follower_model.follower_id == unfollow_user.follower_id).first()
+        if not unfollow_data:
             raise HTTPException(status_code=404,detail="follower not found!")
         
         db.delete(unfollow_data)

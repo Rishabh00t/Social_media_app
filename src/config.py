@@ -11,8 +11,6 @@ class Settings:
     class Config:
         env_file = ".env"
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:rishabh@localhost:5433/test1"
-
 SECRET_KEY = "HyySecret"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 10
