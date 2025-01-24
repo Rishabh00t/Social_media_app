@@ -1,5 +1,5 @@
 from logging.config import fileConfig
-
+import os
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from database.database import Base
@@ -9,10 +9,13 @@ from src.resource.comment.model import Comment_model,Comment_like
 from src.resource.followers.model import Follower_model
 from src.resource.like.model import Like_model
 from src.resource.Post.model import Post_model
+from dotenv import load_dotenv
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-
+config.set_section_option(
+    config.config_ini_section,"sqlalchemy.url",os.getenv("SQLALCHEMY_DATABASE_URL")
+)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:

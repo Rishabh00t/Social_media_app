@@ -84,7 +84,7 @@ async def signup(user, db):
 def login(username: str, password: str, db):
     try:
         user_data = db.query(User_model).filter(User_model.username == username).first()
-
+    
         if user_data:
             if not user_data.is_verified:
                 return {
