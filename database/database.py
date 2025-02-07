@@ -1,22 +1,19 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-import os
-from dotenv import load_dotenv
+from sqlalchemy.orm import declarative_base
+from src.config import Config
 
-load_dotenv()
+db_url = Config.DB_URL
 
-database_url = os.getenv("SQLALCHEMY_DATABASE_URL")
+engine = create_engine(db_url)
 
-engine = create_engine(database_url)
 SessionLocal = sessionmaker(autocommit=False, autoflush=True, bind=engine)
+
 Base = declarative_base()
 
-# Ensure database tables are created
+
 Base.metadata.create_all(bind=engine)
 
-
-# Dependency to get database session
 def get_db():
     db = SessionLocal()
     try:

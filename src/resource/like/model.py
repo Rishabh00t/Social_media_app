@@ -11,3 +11,4 @@ class Like_model(Base):
     post_id = Column(Integer,ForeignKey('posts.id',ondelete='cascade'))
     post = Relationship("Post_model")
     created_at = Column(DateTime,default=datetime.now(tz=timezone.utc))
+    # updated_at = Column(DateTime,default=datetime.now(tz=timezone.utc))

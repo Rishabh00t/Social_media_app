@@ -1,4 +1,4 @@
-from fastapi import Depends,APIRouter
+from fastapi import Depends,APIRouter,HTTPException
 from sqlalchemy.orm import Session
 from database.database import get_db
 from src.resource.Auth.model import User_model
@@ -17,8 +17,11 @@ auth_router=APIRouter()
 
 @auth_router.post("/signup")
 async def create_user(user: userCreate_schema, db: Session = Depends(get_db)):
-    response = await signup(user,db)
-    return response
+    try:
+        response = await signup(user,db)
+        return response
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=str(e))
     
 @auth_router.get("/users")
 async def get_users(db: Session = Depends(get_db)):   

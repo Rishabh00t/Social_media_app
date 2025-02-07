@@ -32,8 +32,7 @@ async def send_otp_email(otp_code: str, email: str):
         return {"success": False, "message": "Failed to send OTP email."}
 
 async def signup(user, db):
-    #breakpoint()
-    try:
+
         hashed_password = password_hash.hash(user.password)
         exist_user = db.query(User_model).filter(User_model.username == user.username).first()
         if exist_user:
@@ -73,13 +72,6 @@ async def signup(user, db):
             },
             "Access-token":token
         }
-    except SQLAlchemyError as e:
-        db.rollback()
-        print(f"Database error during signup: {e}")
-        return {"success": False, "message": "Database error occurred during signup."}
-    except Exception as e:
-        print(f"Unexpected error during signup: {e}")
-    return {"success": False, "message": f"An unexpected error occurred during signup."}
 
 def login(username: str, password: str, db):
     try:

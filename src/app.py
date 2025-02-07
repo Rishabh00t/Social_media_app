@@ -62,4 +62,4 @@ app.include_router(follower_router)
 
 @app.get("/")
 def read_app():
-    return {"welcome": "Welcome to the FastAPI Signup"}
+    return {"message": "Hello, World!"}
