@@ -9,7 +9,7 @@ from fastapi.security import HTTPBearer
 security = HTTPBearer()
 
 
-user_router = APIRouter()
+user_router = APIRouter(tags=["User Profile Management"])
 
 @user_router.get("/view_profile")
 def view_user_profile(profile:View_profile_schema,db:Session=Depends(get_db)):

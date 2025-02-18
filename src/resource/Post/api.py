@@ -5,7 +5,7 @@ from src.functionality.post import create_post,get_post_by_id,delete_post,update
 from src.resource.Post.schema import GetPost_schema,DeletePost_schema,Updatepost_schema,Postcreate_schema
 from src.resource.Post.model import Post_model
 from fastapi.security import HTTPBearer,HTTPAuthorizationCredentials
-post_router=APIRouter()
+post_router=APIRouter(tags=['Post Management'])
 
 security = HTTPBearer()
 

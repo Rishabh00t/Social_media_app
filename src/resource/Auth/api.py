@@ -13,7 +13,7 @@ from fastapi.security import HTTPBearer
 
 security = HTTPBearer()
 
-auth_router=APIRouter()
+auth_router=APIRouter(tags=["Users_Authentication"])
 
 @auth_router.post("/signup")
 async def create_user(user: userCreate_schema, db: Session = Depends(get_db)):
@@ -28,7 +28,7 @@ async def get_users(db: Session = Depends(get_db)):
     users = db.query(User_model).all()
     return {"success": True, "users": users}
 
-@auth_router.get("/login")
+@auth_router.post("/login")
 async def get_user(request: LoginRequest_schema,db:Session=Depends(get_db)):
     response = login(request.username,request.password,db)
     return response

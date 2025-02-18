@@ -4,7 +4,7 @@ from src.resource.followers.schemas import Follower_schema,Unfollow_schema,Get_f
 from database.database import get_db
 from src.functionality.followers import create_follower,unfollow,get_all_follower
 
-follower_router = APIRouter()
+follower_router = APIRouter(tags=['Follow Management'])
 
 @follower_router.post("/follow_user")
 def follow_user(follower:Follower_schema,db:Session=Depends(get_db)):

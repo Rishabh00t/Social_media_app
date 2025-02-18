@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from database.database import get_db
 from src.functionality.like import create_post_like,dislike
 
-like_router = APIRouter()
+like_router = APIRouter(tags=["PostLike Management"])
 
 @like_router.post("/create_like_post")
 def user_post_like_create(post_like:LikeCreate_schema,db:Session=Depends(get_db)):
